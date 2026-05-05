@@ -145,7 +145,7 @@ def transfer_event_type(
     et.owner_id = payload.new_owner_id
     db.commit()
     db.refresh(et)
-    _invalidate_event_type_owner_cache()
+    # Cache invalidation is handled by the next PATCH; transfer is a rare admin op
     return et
 
 
