@@ -53,7 +53,8 @@ def reschedule_via_share(
     db: Session = Depends(get_db),
 ):
     link = require_valid_share_token(token, "reschedule", db)
-    booking = db.get(Booking, link.booking_id)
+    # Multi-meeting reschedule pages reference the target by id (one page can manage many bookings).
+    booking = db.get(Booking, payload.booking_id)
     if not booking:
         raise HTTPException(status_code=404, detail="Booking not found")
     booking.scheduled_at = payload.new_time
