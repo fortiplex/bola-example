@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 
 class BookingCreate(BaseModel):
-    invitee_email: EmailStr
+    invitee_email: str
     invitee_name: str = ""
     scheduled_at: datetime
 
@@ -23,7 +23,7 @@ class BookingHostResponse(BaseModel):
     public_uuid: str
     event_type_id: int
     host_id: int
-    invitee_email: EmailStr
+    invitee_email: str
     invitee_name: str
     scheduled_at: datetime
     status: str
