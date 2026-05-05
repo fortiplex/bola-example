@@ -98,3 +98,10 @@ def cancel_booking(
     booking.status = "cancelled"
     db.commit()
     return {"cancelled": True}
+
+
+# Host-side admin convenience: look up a booking by its public share UUID.
+# UUID is unguessable, only the booking parties have it.
+@router.get("/bookings/by-uuid/{public_uuid}/details", response_model=BookingHostResponse)
+def get_booking_by_uuid_admin(public_uuid: str, db: Session = Depends(get_db)):
+    return load_booking_by_uuid(public_uuid, db)
