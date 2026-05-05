@@ -110,8 +110,6 @@ def update_org_event_type(
     et = db.get(EventType, event_type_id)
     if not et:
         raise HTTPException(status_code=404, detail="Event type not found")
-    if et.org_id != org_id:
-        raise HTTPException(status_code=404, detail="Event type not found in this org")
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(et, field, value)
     db.commit()
