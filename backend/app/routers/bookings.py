@@ -54,11 +54,6 @@ def create_booking(
     return booking
 
 
-@router.get("/bookings/{public_uuid}", response_model=BookingPublicResponse)
-def get_booking_public(public_uuid: str, db: Session = Depends(get_db)):
-    return load_booking_by_uuid(public_uuid, db)
-
-
 @router.get("/bookings/mine", response_model=list[BookingHostResponse])
 def list_my_bookings(
     current_user: User = Depends(get_current_user),
@@ -73,6 +68,11 @@ def get_booking_host_detail(
     booking: Booking = Depends(require_booking_host),
 ):
     return booking
+
+
+@router.get("/bookings/{public_uuid}", response_model=BookingPublicResponse)
+def get_booking_public(public_uuid: str, db: Session = Depends(get_db)):
+    return load_booking_by_uuid(public_uuid, db)
 
 
 @router.patch("/bookings/{booking_id}", response_model=BookingHostResponse)
