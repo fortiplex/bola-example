@@ -145,7 +145,11 @@ def require_valid_share_token(token: str, expected_purpose: str, db: Session) ->
     link = db.query(ShareLink).filter(ShareLink.token == token).first()
     if not link:
         raise HTTPException(status_code=404, detail="Invalid token")
-    if link.expires_at < datetime.now(timezone.utc):
+    # SQLite returns naive datetimes; normalize to UTC for the comparison.
+    expires_at = link.expires_at
+    if expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if expires_at < datetime.now(timezone.utc):
         raise HTTPException(status_code=403, detail="Token expired")
     if link.used_at is not None:
         raise HTTPException(status_code=403, detail="Token already used")
