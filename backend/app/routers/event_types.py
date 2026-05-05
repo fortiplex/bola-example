@@ -162,11 +162,7 @@ def list_user_public_event_types(user_id: int, db: Session = Depends(get_db)):
 def list_event_type_bookings(
     event_type_id: int,
     et: EventType = Depends(require_event_type_accessible),
-    current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    return (
-        db.query(Booking)
-        .filter(Booking.event_type_id == et.id, Booking.host_id == current_user.id)
-        .all()
-    )
+    # Org members can see all bookings on a team event type so they can coordinate scheduling.
+    return db.query(Booking).filter(Booking.event_type_id == et.id).all()
