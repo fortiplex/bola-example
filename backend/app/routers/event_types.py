@@ -136,14 +136,9 @@ def delete_event_type(
 def transfer_event_type(
     event_type_id: int,
     payload: EventTypeTransferRequest,
-    current_user: User = Depends(get_current_user),
+    et: EventType = Depends(require_event_type_owner_or_org_admin),
     db: Session = Depends(get_db),
 ):
-    et = db.get(EventType, event_type_id)
-    if not et:
-        raise HTTPException(status_code=404, detail="Event type not found")
-    if et.owner_id != current_user.id:
-        raise HTTPException(status_code=403, detail="Only the current owner can transfer")
     new_owner = db.get(User, payload.new_owner_id)
     if not new_owner:
         raise HTTPException(status_code=404, detail="Target user not found")
